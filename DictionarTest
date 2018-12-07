@@ -1,0 +1,39 @@
+function dictionary(arr) {
+    let [descrStr, wordStr, command] = arr;
+    let wordObj = {};
+ 
+    let descrArr = descrStr.split(' | ');
+    let wordsArr = wordStr.split(' | ');
+ 
+    for (let description of descrArr) {
+        let [word, descr] = description.split(': ')
+       
+        if (wordObj.hasOwnProperty(word)) {
+            wordObj[word].push(descr);
+        } else {
+            wordObj[word] = [descr]
+        }
+    }
+ 
+    let wordPrintObj = {};
+    for (let word of wordsArr) {
+        if (wordObj.hasOwnProperty(word)) {
+            wordPrintObj[word] = wordObj[word]
+        }
+    }
+    if (command === 'List') {
+        let printArr = Object.keys(wordObj).sort((a, b) =>
+        a.localeCompare(b))
+        console.log(printArr.join(' '))
+    } else {
+        if (wordPrintObj) {
+            for (let word in wordPrintObj) {
+                console.log(word)
+                let printArr = wordPrintObj[word].sort((a, b) => b.length - a.length)
+                for (let descr of printArr) {
+                    console.log(` -${descr}`)
+                }
+            }
+        }
+    }
+}

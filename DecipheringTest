@@ -1,0 +1,26 @@
+function deciphering(arr) {
+    let [encrString, decStr] = arr;
+    let decSubstr = decStr.split(' ');
+    let decodedStr = '';
+    let checkArr = ['{', '}', '|', '#']
+    let check = true
+ 
+    for (let letter of encrString) {
+        if (checkArr.indexOf(letter) === -1 &&
+        (letter.charCodeAt(0) < 100 || letter.charCodeAt(0) > 122)) {
+            check = false;
+            console.log('This is not the book you are looking for.')
+            break;
+        }
+    }
+ 
+    if (check) {
+        for (let letter of encrString) {
+            let newLetter = String.fromCharCode(letter.charCodeAt(0) - 3);
+            decodedStr += newLetter
+        }
+   
+        let printStr = decodedStr.replace(new RegExp(decSubstr[0], 'g'), decSubstr[1])
+        console.log(printStr)
+    }
+}

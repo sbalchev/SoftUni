@@ -1,0 +1,61 @@
+function postOffice(arr) {
+    let [firstPart, secondPart, thirdPart] = arr[0].split('|');
+ 
+    let result = [];
+ 
+    // first part
+    let firstPartWord = '';
+    let firstPartRegex = /([$#%*&])([A-Z]+)(\1)/g;
+ 
+    if (firstPart.match(firstPartRegex)) {
+        firstPartWord = firstPart.match(firstPartRegex);
+        firstPartWord = firstPartWord[0]; // #SOMETEXT#
+        firstPartWord = firstPartWord.substr(1, firstPartWord.length - 2); // remove # -> SOMETEXT
+    }
+ 
+    // second Part
+    let secondPartRegex = /\d{1,2}:\d{2}/g;
+    let secondPartTokens = '';
+    if (secondPart.match(secondPartRegex)) {
+        secondPartTokens = secondPart.match(secondPartRegex);
+    }
+ 
+    // third part
+    thirdPart = thirdPart.split(' ');
+ 
+ 
+    for (let i = 0; i < firstPartWord.length; i++) {
+        let word = '';
+        let startWordLetter = firstPartWord[i];
+        // get current tokens
+        for (let currentPair of secondPartTokens) {
+            let [asciiCode, length] = currentPair.split(':');
+            asciiCode = +asciiCode;
+            if (length.startsWith(0)) {
+                length = length.substring(1, 2);
+            }
+ 
+            length = +length;
+ 
+            // length validation
+            if (length >= 1 && length <= 20) {
+                // check if letter is equal to ascii code
+                if (startWordLetter.charCodeAt(0) == asciiCode) {
+                    // if length is 07
+                    for(let currentWord of thirdPart){
+                        if(currentWord.startsWith(startWordLetter) && currentWord.length === length + 1){ // because our length is after Upper Case letter
+ 
+                            // if isn't in the result array
+                            if(!result.includes(currentWord)){
+                                result.push(currentWord);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+ 
+ 
+    result.forEach(x => console.log(x));
+}

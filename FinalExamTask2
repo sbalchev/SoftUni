@@ -1,0 +1,75 @@
+function solve(input){
+    let validRegex = /^([A-Z][a-z ']+):([A-Z ]+)$/g;
+    for(let data of input){
+        if(data==="end"){
+            break
+        }else{
+            let valid = data.match(validRegex);
+            if(valid){
+                //console.log(data);
+                let[artist,song] = data.split(':');
+                let keyLength = artist.length;
+                //console.log('key ' + keyLength)
+                let encrypted = [];
+                for(let char of data){
+                    if(char === ':'){
+                        encrypted.push('@')
+                    }else  if(char === ' '){
+                        encrypted.push(' ')
+                    }else if(char === '\''){
+                        encrypted.push('\'')
+                    }else{
+                        let toAdd= char.charCodeAt(0)
+                        //console.log(toAdd)
+                        if(char === char.toUpperCase()){
+                            // if it is upper case
+                            if((toAdd+keyLength)>90){
+                                let diff = Math.abs(90-(toAdd+keyLength))
+                                //console.log("diff " + diff)
+                                let numb = 65 +diff -1
+                                let toList =String.fromCharCode(numb)
+                                encrypted.push(toList)
+                                //console.log(char+"->"+String.fromCharCode(numb))
+                            }else{
+                                let numb  = toAdd+keyLength
+                                //console.log(char+"->"+String.fromCharCode(numb))
+                                let toList =String.fromCharCode(numb)
+                                encrypted.push(toList)
+                            }
+                        }else{
+                            //if it is lower case
+                            if((toAdd + keyLength )>122){
+                                let diff = Math.abs(122-(toAdd+keyLength))
+                                //console.log("diff " + diff)
+                                let numb = 97+diff-1
+                                let toList =String.fromCharCode(numb)
+                                //console.log(char+"->"+String.fromCharCode(numb))
+                                encrypted.push(toList)
+                            }else{
+                                let numb  = toAdd+keyLength
+                                //console.log(char+"->"+String.fromCharCode(numb))
+                                let toList =String.fromCharCode(numb)
+                                encrypted.push(toList)
+                            }
+                        }
+                    }
+                }
+                console.log(`Successful encryption: ${encrypted.join('')}`)
+            }else{
+                console.log(`Invalid input!`);
+            }
+        }
+    }
+}
+ 
+solve(['Eminem:VENOM' ,
+    'Linkin park:NUMB' ,
+    'Drake:NONSTOP' ,
+    'Adele:HELLO' ,
+    'end'])
+ 
+solve(['Michael Jackson:ANOTHER PART OF ME' ,
+    'Adele:ONE AND ONLY' ,
+    'Guns n\'roses:NOVEMBER RAIN' ,
+    'Christina Aguilera: HuRt',
+    'end']);

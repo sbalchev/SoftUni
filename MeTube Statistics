@@ -1,0 +1,37 @@
+function statistics(arr) {
+    let command = arr.pop();
+    arr.pop();
+    let videoObj = {}
+ 
+    for (let string of arr) {
+        if (string.includes('-')) {
+            let [name, views] = string.split('-');
+            if (videoObj.hasOwnProperty(name)) {
+                videoObj[name]['view'] += Number(views);
+            } else {
+                videoObj[name] = {'view': Number(views), 'likes': 0}
+            }
+        } else {
+            let [comm, video] = string.split(':');
+            if (videoObj.hasOwnProperty(video)) {
+                let num = comm.length === 4 ? 1 : -1;
+                videoObj[video]['likes'] += num;
+            }
+        }
+    }
+ 
+    let str = command === 'by views' ? 'view' : 'likes';
+    let arrPrint = sortObj(str, videoObj);
+    objPrint(arrPrint, videoObj)
+ 
+    function sortObj(key, obj) {
+        return Object.keys(obj)
+                     .sort((a, b) => obj[b][key] - obj[a][key]);
+    }
+ 
+    function objPrint(array, obj) {
+        for (let key of array) {
+            console.log(`${key} - ${obj[key]['view']} views - ${obj[key]['likes']} likes`);
+        }
+    }
+}

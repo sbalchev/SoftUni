@@ -1,0 +1,32 @@
+function solve(inputArr) {
+ 
+    let generalData = inputArr.splice(0, 3).map(Number);
+    let searchResults = inputArr.map(Number);
+    let [days, users, money] = generalData;
+    let totalMoney = 0;
+    let counter = 1;
+ 
+    for (let search of searchResults) {
+ 
+        if (search <= 5) {
+ 
+            let moneyFromSearch = money;
+ 
+            if (search === 1) {
+                moneyFromSearch *= 2;
+            }
+ 
+            if (counter % 3 === 0) {
+                moneyFromSearch *= 3;
+            }
+ 
+            totalMoney += moneyFromSearch;
+        }
+ 
+        counter++;
+    }
+ 
+    totalMoney *= days;
+ 
+    console.log(`Total money earned for ${days} days: ${totalMoney.toFixed(2)}`);
+}

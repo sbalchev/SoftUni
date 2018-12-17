@@ -1,0 +1,40 @@
+function solve(input) {
+    input.pop();
+    let forceUsers = {};
+    for (let command of input) {
+        if (command.includes('|')) {
+            let [forceSide, forceUser] = command.split(' | ');
+            if (!forceUsers.hasOwnProperty(forceUser)) {
+                forceUsers[forceUser] = forceSide;
+            }
+        } else if (command.includes('->')) {
+            let [forceUser, newSide] = command.split(' -> ');
+            forceUsers[forceUser] = newSide;
+            console.log(`${forceUser} joins the ${newSide} side!`);
+        }
+    }
+    let someShit = Object.entries(forceUsers);
+    let finalCount = {};
+    for (let tinyShit of someShit) {
+        let [user, side] = tinyShit
+        if (!finalCount.hasOwnProperty(side)) {
+            finalCount[side] = [user];
+        } else {
+            finalCount[side].push(user)
+        }
+    }
+    finalCount = Object.entries(finalCount)
+        .sort((a, b) => {
+            return b[1].length - a[1].length
+                || a[0].localeCompare(b[0])
+        });
+    for (let entry of finalCount) {
+        if (entry[1].length === 0) { continue };
+        console.log(`Side: ${entry[0]}, Members: ${entry[1].length}`);
+        let sortedJedi = entry[1]
+            .sort((a, b) => { return a.localeCompare(b) });
+        for (let jedi of sortedJedi) {
+            console.log(`! ${jedi}`);
+        }
+    }
+}

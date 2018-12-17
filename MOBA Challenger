@@ -1,0 +1,58 @@
+function solve(arr) {
+    arr.pop();
+    let personObject = {};
+ 
+    for (let dataString of arr) {
+        if (dataString.includes('->')) {
+            let [person, technique, skill] = dataString.split(' -> ');
+            if (!(person in personObject)) {
+                personObject[person] = { [technique]: +skill};
+            } else {
+                if (technique in personObject[person]) {
+                    personObject[person][technique] = Math.max(personObject[person][technique], +skill);
+                } else {
+                    personObject[person][technique] = +skill;
+                }
+            }
+        } else {
+            let [person1, person2] = dataString.split(' vs ');
+            if (person1 in personObject && person2 in personObject) {
+                let arrTechniques = intersection(personObject[person1], personObject[person2]);
+                function intersection(o1, o2) {
+                    return Object.keys(o1).filter(x => Object.keys(o2).includes(x));
+                }
+                if (arrTechniques.length > 0) {
+                    let [sum1, sum2] = [sumTech(person1, arrTechniques, personObject), sumTech(person2, arrTechniques, personObject)];
+                    function sumTech(person, arr, object) {
+                        return arr.map(x => object[person][x])
+                                     .reduce((a, b) => a + b);
+                    }
+                    if (sum1 !== sum2) {
+                        let del = sum1 < sum2 ? delete personObject[person1] : delete personObject[person2]
+                    }
+                }
+            }
+        }
+    }
+    let printArr = [];
+ 
+    for (let person in personObject) {
+        let sumSkill = 0;
+        for (let skill in personObject[person]) {
+            sumSkill += personObject[person][skill]
+        }
+        printArr.push([person, sumSkill])
+    }
+ 
+    let sortedPrintArray = printArr.sort((a, b) => b[1] - a[1])
+ 
+    for (let person of sortedPrintArray) {
+        console.log(`${person[0]}: ${person[1]} skill`)
+        let sortedTechniques = Object
+            .keys(personObject[person[0]]).sort()
+            .sort((a,b) => personObject[person[0]][b] - personObject[person[0]][a]);
+        for (let tech of sortedTechniques) {
+            console.log(`- ${tech} <::> ${personObject[person[0]][tech]}`)
+        }
+    }
+}

@@ -1,0 +1,43 @@
+function solve(input) {
+    let journal = input[0].split(', ');
+    let commandList = input.slice(1);
+    let quests = journal;
+    for (let command of commandList) {
+        if (command === 'Retire!') {
+            break;
+        }
+        let action = command.split(' - ')[0];
+        let quest = command.split(' - ')[1];
+        if (action === 'Start') {
+ 
+            if (!quests.includes(quest)) {
+                quests.push(quest)
+            }
+        } else if (action === 'Complete') {
+            let index = quests.indexOf(quest);
+            if (quests.includes(quest)) {
+                quests.splice(index, 1)
+            }
+        } else if (action === 'Side Quest') {
+            let mainQuest = quest.split(':')[0];
+            let sideQuest = quest.split(':')[1];
+            if (quests.includes(mainQuest)) {
+                let index = quests.indexOf(mainQuest);
+                if (!quests.includes(sideQuest)) {
+                    quests.splice(index + 1, 0, sideQuest)
+                }
+            }
+ 
+ 
+        } else if (action === 'Renew') {
+            if (quests.includes(quest)) {
+                let index = quests.indexOf(quest);
+                quests.splice(index, 1);
+                quests.push(quest)
+            }
+ 
+        }
+ 
+    }
+    console.log(quests.join(', '))
+}

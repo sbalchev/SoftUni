@@ -1,0 +1,40 @@
+function f(input) {
+    let map = new Map();
+    let currentTime = 0;
+    let currentPassengers = 0;
+    for (let inputRow of input) {
+        let [town, times, passengers] = inputRow.split(':').join('|').split('->').join('|').split('|');
+        let time = Number(times);
+        if (!isNaN(time)) {
+            if (!map.has(town)) {
+                map.set(town, [time, passengers]);
+            } else if (map.has(town)) {
+                currentTime = map.get(town)[0];
+                currentPassengers = +map.get(town)[1];
+                if (time < currentTime || currentTime === 0) {
+                    map.set(town, [time]);
+                    currentTime = map.get(town)[0];
+                }
+                currentPassengers += +passengers;
+                map.set(town, [currentTime, currentPassengers]);
+            }
+        } else if (isNaN(time) && inputRow!=='Slide rule') {
+            if (!map.has(town)) {
+                map.set(town, [0, 0]);
+            } else {
+                let currentPassengers =map.get(town)[1];
+                currentPassengers-=passengers;
+                map.set(town, [0,currentPassengers]);
+            }
+        } else if (inputRow === 'Slide rule') {
+            let sortByTown = [...map].sort((a, b) => a[0].localeCompare(b[0]));
+            let sortByTime = [...sortByTown].sort((a, b) => a[1][0] - b[1][0]);
+            for (let el of sortByTime) {
+                if (el[1][0] !== 0) {
+                    console.log(`${el[0]} -> Time: ${el[1][0]} -> Passengers: ${el[1][1]}`);
+                }
+            }
+        }
+    }
+ 
+}

@@ -1,0 +1,78 @@
+function solve(input) {
+ 
+  for (const line of input) {
+    if (line === 'end') {
+      break;
+    }
+ 
+    let [ artist, song ] = line.split(':');
+ 
+    if (!artistIsValid(artist) || !songIsValid(song)) {
+      console.log('Invalid input!');
+      continue;
+    }
+ 
+    let key = artist.length;
+    let encryptedString = '';
+    for (const char of line) {
+      if (char === ':') {
+        encryptedString += '@';
+        continue;
+      }
+ 
+      let asciiCode = char.charCodeAt(0);
+      if ((asciiCode >= 65 && asciiCode <= 90)) {
+        asciiCode += key;
+        if (asciiCode > 90) {
+          asciiCode -= 26;
+        }
+      }
+ 
+      if ((asciiCode >= 97 && asciiCode <= 122)) {
+        asciiCode += key;
+        if (asciiCode > 122) {
+          asciiCode -= 26;
+        }
+      }
+ 
+      encryptedString += String.fromCharCode(asciiCode);
+    }
+ 
+    console.log(`Successful encryption: ${encryptedString}`);
+  }
+ 
+  function artistIsValid(artist) {
+    let firstCharCode = artist.charCodeAt(0);
+    if (firstCharCode < 65 || firstCharCode > 90) {
+      return false;
+    }
+ 
+    for (let index = 1; index < artist.length; index++) {
+      let asciiCode = artist.charCodeAt(index);
+      if ((asciiCode >= 97 && asciiCode <= 122)
+      || artist[index] === ' '
+      || artist[index] === '\'') {
+        continue;
+      } else {
+        return false;
+      }
+    }
+ 
+    return true;
+  }
+ 
+  function songIsValid(song) {
+    for (let index = 0; index < song.length; index++) {
+      let asciiCode = song.charCodeAt(index);
+      if ((asciiCode >= 65 && asciiCode <= 90)
+      || song[index] === ' ') {
+        continue;
+      } else {
+        return false;
+      }
+     
+    }
+ 
+    return true;
+  }
+}
